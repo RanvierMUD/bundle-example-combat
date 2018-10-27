@@ -3,8 +3,8 @@
 const { Broadcast: B } = require('ranvier');
 const Combat = require('./lib/Combat');
 const CombatErrors = require('./lib/CombatErrors');
-const LevelUtil = require('../ranvier-lib/lib/LevelUtil');
-const WebsocketStream = require('../ranvier-websocket/lib/WebsocketStream');
+const LevelUtil = require('../bundle-example-lib/lib/LevelUtil');
+const WebsocketStream = require('../bundle-example-websocket/lib/WebsocketStream');
 
 /**
  * Auto combat module
