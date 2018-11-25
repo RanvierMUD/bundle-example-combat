@@ -40,7 +40,7 @@ module.exports = () => {
 
         items.forEach(item => {
           item.hydrate(state);
-          corpse.addItem(item)
+          corpse.addItem(item);
         });
         this.room.addItem(corpse);
         state.ItemManager.add(corpse);
