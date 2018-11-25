@@ -2,7 +2,6 @@
 
 const Ranvier = require('ranvier');
 const B = Ranvier.Broadcast;
-const Parser = Ranvier.CommandParser.CommandParser;
 const Logger = Ranvier.Logger;
 
 const Combat = require('../lib/Combat');

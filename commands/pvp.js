@@ -2,7 +2,6 @@
 
 const Ranvier = require('ranvier');
 const { Broadcast } = Ranvier;
-const { CommandParser } = Ranvier.CommandParser;
 
 module.exports = {
   command : (state) => (args, player) => {
