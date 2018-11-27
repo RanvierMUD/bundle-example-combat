@@ -4,7 +4,6 @@ module.exports = () => {
   const Ranvier = require('ranvier');
   const Broadcast = Ranvier.Broadcast;
   const Logger = Ranvier.Logger;
-  const Player = Ranvier.Player;
 
   return {
     listeners: {
@@ -22,7 +21,7 @@ module.exports = () => {
       },
 
       decay: state => function (item) {
-        const { room, type, belongsTo } = this;
+        const { room, belongsTo } = this;
 
         if (belongsTo) {
           const owner = this.findOwner();

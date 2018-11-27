@@ -8,7 +8,6 @@ const Combat = require('../../lib/Combat');
  * the player having to be involved
  */
 module.exports = () => {
-  const Ranvier = require('ranvier');
   return  {
     listeners: {
       /**

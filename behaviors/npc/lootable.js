@@ -4,7 +4,6 @@ const LootTable = require('../../lib/LootTable');
 
 module.exports = () => {
   const Ranvier = require('ranvier');
-  const B = Ranvier.Broadcast;
   const Player = Ranvier.Player;
   const Item = Ranvier.Item;
   const Logger = Ranvier.Logger;
@@ -41,7 +40,7 @@ module.exports = () => {
 
         items.forEach(item => {
           item.hydrate(state);
-          corpse.addItem(item)
+          corpse.addItem(item);
         });
         this.room.addItem(corpse);
         state.ItemManager.add(corpse);
