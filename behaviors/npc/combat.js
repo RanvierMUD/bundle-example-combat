@@ -35,8 +35,8 @@ module.exports = () => {
       },
 
       damaged: state => function (config, damage) {
-        if (this.getAttribute('health') <= 0 && damage.attacker) {
-          this.combatData.killedBy = damage.attacker;
+        if (this.getAttribute('health') <= 0) {
+          Combat.handleDeath(state, this, damage.attacker);
         }
       },
 

@@ -10,19 +10,22 @@ module.exports = () => {
 
   return {
     listeners: {
-      killed: state => function (config, killer) {
+      killed: state => async function (config, killer) {
+        const { room, name, area, keywords } = this;
+
         const lootTable = new LootTable(state, config);
         const currencies = lootTable.currencies();
-        const items = lootTable.roll().map(
+        const roll = await lootTable.roll();
+        const items = roll.map(
           item => state.ItemFactory.create(state.AreaManager.getAreaByReference(item), item)
         );
 
-        const corpse = new Item(this.area, {
+        const corpse = new Item(area, {
           id: 'corpse',
-          name: `Corpse of ${this.name}`,
-          roomDesc: `Corpse of ${this.name}`,
-          description: `The rotting corpse of ${this.name}`,
-          keywords: this.keywords.concat(['corpse']),
+          name: `Corpse of ${name}`,
+          roomDesc: `Corpse of ${name}`,
+          description: `The rotting corpse of ${name}`,
+          keywords: keywords.concat(['corpse']),
           type: 'CONTAINER',
           metadata: {
             noPickup: true,
@@ -42,7 +45,7 @@ module.exports = () => {
           item.hydrate(state);
           corpse.addItem(item);
         });
-        this.room.addItem(corpse);
+        room.addItem(corpse);
         state.ItemManager.add(corpse);
 
         if (killer && killer instanceof Player) {

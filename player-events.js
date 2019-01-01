@@ -154,10 +154,6 @@ module.exports = {
         return;
       }
 
-      if (this.getAttribute('health') <= 0 && damage.attacker) {
-        this.combatData.killedBy = damage.attacker;
-      }
-
       let buf = '';
       if (damage.attacker) {
         buf = `<b>${damage.attacker.name}</b>`;
@@ -177,29 +173,31 @@ module.exports = {
 
       B.sayAt(this, buf);
 
-      // show damage to party members
-      if (!this.party) {
-        return;
+      if (this.party) {
+        // show damage to party members
+        for (const member of this.party) {
+          if (member === this || member.room !== this.room) {
+            continue;
+          }
+
+          let buf = '';
+          if (damage.attacker) {
+            buf = `<b>${damage.attacker.name}</b>`;
+          }
+
+          if (damage.source) {
+            buf += (damage.attacker ? "'s " : ' ') + `<b>${damage.source.name}</b>`;
+          } else if (!damage.attacker) {
+            buf += "Something";
+          }
+
+          buf += ` hit <b>${this.name}</b> for <b><red>${damage.finalAmount}</red></b> damage`;
+          B.sayAt(member, buf);
+        }
       }
 
-      for (const member of this.party) {
-        if (member === this || member.room !== this.room) {
-          continue;
-        }
-
-        let buf = '';
-        if (damage.attacker) {
-          buf = `<b>${damage.attacker.name}</b>`;
-        }
-
-        if (damage.source) {
-          buf += (damage.attacker ? "'s " : ' ') + `<b>${damage.source.name}</b>`;
-        } else if (!damage.attacker) {
-          buf += "Something";
-        }
-
-        buf += ` hit <b>${this.name}</b> for <b><red>${damage.finalAmount}</red></b> damage`;
-        B.sayAt(member, buf);
+      if (this.getAttribute('health') <= 0) {
+        Combat.handleDeath(state, this, damage.attacker);
       }
     },
 
