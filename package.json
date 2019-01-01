@@ -3,8 +3,5 @@
   "name": "bundle-example-combat",
   "version": "1.0.0",
   "description": "Bundle for an example diku-like combat system",
-  "license": "MIT",
-  "ranvierDeps": {
-    "bundle-example-player-events": "https://github.com/RanvierMUD/bundle-example-player-events.git"
-  }
+  "license": "MIT"
 }
