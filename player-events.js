@@ -1,6 +1,6 @@
 'use strict';
 
-const { Broadcast: B } = require('ranvier');
+const { Config, Broadcast: B } = require('ranvier');
 const Combat = require('./lib/Combat');
 const CombatErrors = require('./lib/CombatErrors');
 const LevelUtil = require('../bundle-example-lib/lib/LevelUtil');
@@ -234,41 +234,48 @@ module.exports = {
      * Player was killed
      * @param {Character} killer
      */
-    killed: state => function (killer) {
-      this.removePrompt('combat');
+     killed: state => {
+       const startingRoomRef = Config.get('startingRoom');
+       if (!startingRoomRef) {
+         Logger.error('No startingRoom defined in ranvier.json');
+       }
 
-      const othersDeathMessage = killer ?
-        `<b><red>${this.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
-        `<b><red>${this.name} collapses to the ground, dead</b></red>`;
+       return function (killer) {
+        this.removePrompt('combat');
 
-      B.sayAtExcept(this.room, othersDeathMessage, (killer ? [killer, this] : this));
+        const othersDeathMessage = killer ?
+          `<b><red>${this.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
+          `<b><red>${this.name} collapses to the ground, dead</b></red>`;
 
-      if (this.party) {
-        B.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
-      }
+        B.sayAtExcept(this.room, othersDeathMessage, (killer ? [killer, this] : this));
 
-      this.setAttributeToMax('health');
-
-      let home = state.RoomManager.getRoom(this.getMeta('waypoint.home'));
-      if (!home) {
-        home = state.RoomManager.startingRoom;
-      }
-
-      this.moveTo(home, _ => {
-        state.CommandManager.get('look').execute(null, this);
-
-        B.sayAt(this, '<b><red>Whoops, that sucked!</red></b>');
-        if (killer && killer !== this) {
-          B.sayAt(this, `You were killed by ${killer.name}.`);
+        if (this.party) {
+          B.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
         }
-        // player loses 20% exp gained this level on death
-        const lostExp = Math.floor(this.experience * 0.2);
-        this.experience -= lostExp;
-        this.save();
-        B.sayAt(this, `<red>You lose <b>${lostExp}</b> experience!</red>`);
 
-        B.prompt(this);
-      });
+        this.setAttributeToMax('health');
+
+        let home = state.RoomManager.getRoom(this.getMeta('waypoint.home'));
+        if (!home) {
+          home = state.RoomManager.get(startingRoomRef);
+        }
+
+        this.moveTo(home, _ => {
+          state.CommandManager.get('look').execute(null, this);
+
+          B.sayAt(this, '<b><red>Whoops, that sucked!</red></b>');
+          if (killer && killer !== this) {
+            B.sayAt(this, `You were killed by ${killer.name}.`);
+          }
+          // player loses 20% exp gained this level on death
+          const lostExp = Math.floor(this.experience * 0.2);
+          this.experience -= lostExp;
+          this.save();
+          B.sayAt(this, `<red>You lose <b>${lostExp}</b> experience!</red>`);
+
+          B.prompt(this);
+        });
+      };
     },
 
     /**
