@@ -46,8 +46,8 @@ module.exports = {
      * @param {Damage} damage
      * @param {Character} target
      */
-    hit: state => function (damage, target) {
-      if (damage.hidden) {
+    hit: state => function (damage, target, finalAmount) {
+      if (damage.metadata.hidden) {
         return;
       }
 
@@ -58,16 +58,16 @@ module.exports = {
         buf = "You hit";
       }
 
-      buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
+      buf += ` <b>${target.name}</b> for <b>${finalAmount}</b> damage.`;
 
-      if (damage.critical) {
+      if (damage.metadata.critical) {
         buf += ' <red><b>(Critical)</b></red>';
       }
 
       B.sayAt(this, buf);
 
       if (this.equipment.has('wield')) {
-        this.equipment.get('wield').emit('hit', damage, target);
+        this.equipment.get('wield').emit('hit', damage, target, finalAmount);
       }
 
       // show damage to party members
@@ -87,7 +87,7 @@ module.exports = {
           buf = `${this.name} hit`;
         }
 
-        buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
+        buf += ` <b>${target.name}</b> for <b>${finalAmount}</b> damage.`;
         B.sayAt(member, buf);
       }
     },
@@ -97,7 +97,7 @@ module.exports = {
      * @param {Character} target
      */
     heal: state => function (heal, target) {
-      if (heal.hidden) {
+      if (heal.metadata.hidden) {
         return;
       }
 
@@ -109,7 +109,7 @@ module.exports = {
           buf = "You heal";
         }
 
-        buf += `<b> ${target.name}</b> for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
+        buf += `<b> ${target.name}</b> for <b><green>${finalAmount}</green></b> ${heal.attribute}.`;
         B.sayAt(this, buf);
       }
 
@@ -131,13 +131,13 @@ module.exports = {
         }
 
         buf += ` <b>${target.name}</b>`;
-        buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
+        buf += ` for <b><green>${finalAmount}</green></b> ${heal.attribute}.`;
         B.sayAt(member, buf);
       }
     },
 
-    damaged: state => function (damage) {
-      if (damage.hidden || damage.attribute !== 'health') {
+    damaged: state => function (damage, finalAmount) {
+      if (damage.metadata.hidden || damage.attribute !== 'health') {
         return;
       }
 
@@ -152,9 +152,9 @@ module.exports = {
         buf += "Something";
       }
 
-      buf += ` hit <b>You</b> for <b><red>${damage.finalAmount}</red></b> damage.`;
+      buf += ` hit <b>You</b> for <b><red>${finalAmount}</red></b> damage.`;
 
-      if (damage.critical) {
+      if (damage.metadata.critical) {
         buf += ' <red><b>(Critical)</b></red>';
       }
 
@@ -178,7 +178,7 @@ module.exports = {
             buf += "Something";
           }
 
-          buf += ` hit <b>${this.name}</b> for <b><red>${damage.finalAmount}</red></b> damage`;
+          buf += ` hit <b>${this.name}</b> for <b><red>${finalAmount}</red></b> damage`;
           B.sayAt(member, buf);
         }
       }
@@ -188,8 +188,8 @@ module.exports = {
       }
     },
 
-    healed: state => function (heal) {
-      if (heal.hidden) {
+    healed: state => function (heal, finalAmount) {
+      if (heal.metadata.hidden) {
         return;
       }
 
@@ -209,9 +209,9 @@ module.exports = {
       }
 
       if (heal.attribute === 'health') {
-        buf = `${attacker}${source} heals you for <b><red>${heal.finalAmount}</red></b>.`;
+        buf = `${attacker}${source} heals you for <b><red>${finalAmount}</red></b>.`;
       } else {
-        buf = `${attacker}${source} restores <b>${heal.finalAmount}</b> ${heal.attribute}.`;
+        buf = `${attacker}${source} restores <b>${finalAmount}</b> ${heal.attribute}.`;
       }
       B.sayAt(this, buf);
 
@@ -225,7 +225,7 @@ module.exports = {
           continue;
         }
 
-        let buf = `${attacker}${source} heals ${this.name} for <b><red>${heal.finalAmount}</red></b>.`;
+        let buf = `${attacker}${source} heals ${this.name} for <b><red>${finalAmount}</red></b>.`;
         B.sayAt(member, buf);
       }
     },
