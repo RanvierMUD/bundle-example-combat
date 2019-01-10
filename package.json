@@ -3,5 +3,8 @@
   "name": "bundle-example-combat",
   "version": "1.0.0",
   "description": "Bundle for an example diku-like combat system",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "rando-js": "^0.2.0"
+  }
 }
