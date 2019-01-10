@@ -52,7 +52,7 @@ module.exports = {
       }
 
       let buf = '';
-      if (damage.source) {
+      if (damage.source !== this) {
         buf = `Your <b>${damage.source.name}</b> hit`;
       } else {
         buf = "You hit";
@@ -81,7 +81,7 @@ module.exports = {
         }
 
         let buf = '';
-        if (damage.source) {
+        if (damage.source !== this) {
           buf = `${this.name} <b>${damage.source.name}</b> hit`;
         } else {
           buf = `${this.name} hit`;
@@ -103,7 +103,7 @@ module.exports = {
 
       if (target !== this) {
         let buf = '';
-        if (heal.source) {
+        if (heal.source !== this) {
           buf = `Your <b>${heal.source.name}</b> healed`;
         } else {
           buf = "You heal";
@@ -124,7 +124,7 @@ module.exports = {
         }
 
         let buf = '';
-        if (heal.source) {
+        if (heal.source !== this) {
           buf = `${this.name} <b>${heal.source.name}</b> healed`;
         } else {
           buf = `${this.name} healed`;
@@ -146,7 +146,7 @@ module.exports = {
         buf = `<b>${damage.attacker.name}</b>`;
       }
 
-      if (damage.source) {
+      if (damage.source !== damage.attacker) {
         buf += (damage.attacker ? "'s " : " ") + `<b>${damage.source.name}</b>`;
       } else if (!damage.attacker) {
         buf += "Something";
@@ -172,7 +172,7 @@ module.exports = {
             buf = `<b>${damage.attacker.name}</b>`;
           }
 
-          if (damage.source) {
+          if (damage.source !== damage.attacker) {
             buf += (damage.attacker ? "'s " : ' ') + `<b>${damage.source.name}</b>`;
           } else if (!damage.attacker) {
             buf += "Something";
@@ -201,7 +201,7 @@ module.exports = {
         attacker = `<b>${heal.attacker.name}</b> `;
       }
 
-      if (heal.source) {
+      if (heal.source !== heal.attacker) {
         attacker = attacker ? attacker + "'s " : '';
         source = `<b>${heal.source.name}</b>`;
       } else if (!heal.attacker) {
