@@ -15,7 +15,7 @@ module.exports = {
 
     let roomExit = null;
     if (direction) {
-      roomExit = CommandParser.canGo(state, player, direction);
+      roomExit = CommandParser.canGo(player, direction);
     } else {
       roomExit = Random.fromArray(player.room.getExits());
     }
