@@ -2,7 +2,7 @@
 
 const { Random } = require('rando-js');
 const { Broadcast } = require('ranvier');
-const { CommandParser } = require('@bundles/bundle-example-lib/lib/CommandParser');
+const { CommandParser } = require('../..//bundle-example-lib/lib/CommandParser');
 const say = Broadcast.sayAt;
 
 module.exports = {
