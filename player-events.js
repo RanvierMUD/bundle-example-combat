@@ -257,7 +257,7 @@ module.exports = {
 
         let home = state.RoomManager.getRoom(this.getMeta('waypoint.home'));
         if (!home) {
-          home = state.RoomManager.get(startingRoomRef);
+          home = state.RoomManager.getRoom(startingRoomRef);
         }
 
         this.moveTo(home, _ => {
